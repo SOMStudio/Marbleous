@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Orbitality.Menu
+namespace Marbleous.Menu
 {
     public class UiLevelButton : MonoBehaviour
     {

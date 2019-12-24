@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Orbitality.Menu
+namespace Marbleous.Menu
 {
     public class MenuManager : BaseMenuManager
     {

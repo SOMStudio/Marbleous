@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-namespace Orbitality.SaveSystem
+namespace Marbleous.SaveSystem
 {
     public class FileSaveSystem : ISaveSystem
     {

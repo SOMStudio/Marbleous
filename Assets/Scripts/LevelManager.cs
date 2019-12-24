@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -326,9 +327,30 @@ public class LevelManager : MonoBehaviour
         return reachedTarget;
     }
 
+    private void CheckCompleteLevel()
+    {
+        bool completeLevel = true;
+        
+        foreach (var hole in holeList)
+        {
+            if (hole.Active)
+            {
+                completeLevel = false;
+                break;
+            }
+        }
+
+        if (completeLevel)
+        {
+            Invoke(nameof(GoToMainScene), 2);
+        }
+    }
+    
     private void BallFallInHole(Mover ball)
     {
         ball.transform.position -= new Vector3(0, 0, -2.3f);
+
+        CheckCompleteLevel();
         
         SoundManager.Instance?.PlaySoundByIndex(3, ball.transform.position);
     }
@@ -342,7 +364,16 @@ public class LevelManager : MonoBehaviour
 
     public void BallCanNotMove(Mover ball, MoveDirection moveDirection)
     {
-        Debug.Log("Need create wave in " + moveDirection);
+        switch (moveDirection)
+        {
+            case MoveDirection.left:
+                break;
+        }
+    }
+
+    public void GoToMainScene()
+    {
+        SceneManager.LoadScene("Main");
     }
 }
 

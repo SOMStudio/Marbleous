@@ -1,4 +1,4 @@
-﻿namespace Orbitality.SaveSystem
+﻿namespace Marbleous.SaveSystem
 {
     public interface ISaveSystem
     {
