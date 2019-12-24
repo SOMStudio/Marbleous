@@ -6,14 +6,19 @@ namespace Marbleous
 {
     public class Mover : MonoBehaviour
     {
+        [Header("Main")]
         [SerializeField] private float speed = 10.0f;
-
         [SerializeField] private bool moving = false;
-
         [SerializeField] private bool active = true;
 
+        [Header("Spline")]
         [SerializeField] int splineNumber = -1;
         [SerializeField] float splineRelatePosition = 0.0f;
+
+        [Header("Shift")]
+        [SerializeField] private AnimationCurve shiftCurve;
+        [SerializeField] private float shiftMultiplier = 1;
+        [SerializeField] private float timeDuration = 1;
 
         private bool startLevel = false;
 
@@ -330,6 +335,75 @@ namespace Marbleous
                     Move(MoveSplineDirection.decrement);
                 }
             }
+        }
+        
+        public void Shake(MoveDirection moveDirection)
+        {
+            if (!active) return;
+            if (moving) return;
+
+            
+            StartCoroutine(ShakeToRight(moveDirection));
+            
+        }
+
+        private void PlaySoundShake()
+        {
+            SoundManager.Instance.PlaySoundByIndex(3, transform.position);
+        }
+
+        private Vector3 MoveDirectionToVector3(MoveDirection moveDirection)
+        {
+            Vector3 result = Vector3.zero;
+            
+            switch (moveDirection)
+            {
+                case MoveDirection.left:
+                    result = Vector3.left;
+                    break;
+                case MoveDirection.right:
+                    result = Vector3.right;
+                    break;
+                case MoveDirection.up:
+                    result = Vector3.up;
+                    break;
+                case MoveDirection.down:
+                    result = Vector3.down;
+                    break;
+            }
+
+            return result;
+        }
+        
+        private IEnumerator ShakeToRight(MoveDirection moveDirection)
+        {
+            Vector3 startPosition = transform.position;
+            float timeForShake = 0.0f;
+            Vector3 shiftDirection = MoveDirectionToVector3(moveDirection);
+
+            moving = true;
+
+            Invoke(nameof(PlaySoundShake), timeDuration / 3);
+            
+            while (moving)
+            {
+                timeForShake += Time.deltaTime / timeDuration;
+
+                if (timeForShake >= 1)
+                {
+                    timeForShake = 1;
+                    
+                    moving = false;
+
+                    PlaySoundShake();
+                }
+
+                transform.position = startPosition + shiftMultiplier * shiftCurve.Evaluate(timeForShake) * shiftDirection;
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            moving = false;
         }
     }
 }

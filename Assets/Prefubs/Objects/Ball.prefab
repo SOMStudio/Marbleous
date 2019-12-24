@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6691983998704512227}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 70}
+  m_LocalPosition: {x: -3.2, y: 9.2, z: 70}
   m_LocalScale: {x: 2.7252, y: 2.7252, z: 2.7252}
   m_Children: []
   m_Father: {fileID: 0}
@@ -91,11 +91,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0042515fefb94164fbad858e56a9f1a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spline: []
   speed: 10
   moving: 0
   active: 1
-  splineNumber: -1
-  routeNumber: -1
-  routePosition: {x: 0, y: 0, z: 0}
-  routRelatePosition: 0
+  splineNumber: 0
+  splineRelatePosition: 0.4796416
+  shiftCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 3.096579
+      outSlope: 4
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 4
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.10143921
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.75
+      value: 1
+      inSlope: -0
+      outSlope: -4
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.331111
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -4
+      outSlope: -4
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  shiftMultiplier: 0.3
+  timeDuration: 0.3

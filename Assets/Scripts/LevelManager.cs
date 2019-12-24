@@ -377,11 +377,7 @@ namespace Marbleous
 
         public void BallCanNotMove(Mover ball, MoveDirection moveDirection)
         {
-            switch (moveDirection)
-            {
-                case MoveDirection.left:
-                    break;
-            }
+            ball.Shake(moveDirection);
         }
 
         public void GoToMainScene()
