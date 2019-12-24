@@ -1,88 +1,90 @@
 ﻿using UnityEngine;
 
-public class Hole : MonoBehaviour
+namespace Marbleous
 {
-    [SerializeField] private bool active = true;
-    
-    [SerializeField] int splineNumber = -1;
-    [SerializeField] float splineRelatePosition = 0.0f;
-    
-    private bool startLevel = false;
+    public class Hole : MonoBehaviour
+    {
+        [SerializeField] private bool active = true;
 
-    public int SplineNumber
-    {
-        get { return splineNumber; }
-    }
-    
-    public float SplineRelatePosition
-    {
-        get { return splineRelatePosition; }
-    }
+        [SerializeField] int splineNumber = -1;
+        [SerializeField] float splineRelatePosition = 0.0f;
 
-    public bool Active
-    {
-        get { return active; }
-        set { active = value; }
-    }
+        private bool startLevel = false;
 
-    private void OnDrawGizmos()
-    {
-        if (!startLevel)
+        public int SplineNumber
         {
-            bool findProblem = false;
-            var levelManager = FindObjectOfType<LevelManager>();
+            get { return splineNumber; }
+        }
 
-            if (levelManager != null)
+        public float SplineRelatePosition
+        {
+            get { return splineRelatePosition; }
+        }
+
+        public bool Active
+        {
+            get { return active; }
+            set { active = value; }
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (!startLevel)
             {
-                if (!levelManager.InWorkState)
+                bool findProblem = false;
+                var levelManager = FindObjectOfType<LevelManager>();
+
+                if (levelManager != null)
+                {
+                    if (!levelManager.InWorkState)
+                    {
+                        findProblem = true;
+                    }
+                }
+                else
                 {
                     findProblem = true;
                 }
-            }
-            else
-            {
-                findProblem = true;
-            }
 
-            if (!findProblem)
-            {
-                bool findNearestPosition = false;
-
-                float minDistance = 100;
-                int splineNumber = 0;
-                int routeNumber = 0;
-
-                for (int i = 0; i < levelManager.SplineList.Length; i++)
+                if (!findProblem)
                 {
-                    for (int j = 0; j <= levelManager.SplineList[i].RoutesCount; j++)
+                    bool findNearestPosition = false;
+
+                    float minDistance = 100;
+                    int splineNumber = 0;
+                    int routeNumber = 0;
+
+                    for (int i = 0; i < levelManager.SplineList.Length; i++)
                     {
-                        Vector3 curRoutePosition = levelManager.SplineList[i].GetRoutePosition(j);
-                        float distanceTo = (transform.position - curRoutePosition).magnitude;
-                        if (distanceTo < 10)
+                        for (int j = 0; j <= levelManager.SplineList[i].RoutesCount; j++)
                         {
-                            if (distanceTo < minDistance)
+                            Vector3 curRoutePosition = levelManager.SplineList[i].GetRoutePosition(j);
+                            float distanceTo = (transform.position - curRoutePosition).magnitude;
+                            if (distanceTo < 10)
                             {
-                                splineNumber = i;
-                                routeNumber = j;
+                                if (distanceTo < minDistance)
+                                {
+                                    splineNumber = i;
+                                    routeNumber = j;
 
-                                minDistance = distanceTo;
+                                    minDistance = distanceTo;
 
-                                findNearestPosition = true;
+                                    findNearestPosition = true;
+                                }
                             }
                         }
                     }
-                }
 
-                if (findNearestPosition)
-                {
-                    this.splineNumber = splineNumber;
-                    splineRelatePosition = levelManager.SplineList[splineNumber].GetRouteRelatePosition(routeNumber);
+                    if (findNearestPosition)
+                    {
+                        this.splineNumber = splineNumber;
+                        splineRelatePosition =
+                            levelManager.SplineList[splineNumber].GetRouteRelatePosition(routeNumber);
 
-                    transform.position = levelManager.SplineList[splineNumber].GetRoutePosition(routeNumber);
+                        transform.position = levelManager.SplineList[splineNumber].GetRoutePosition(routeNumber);
+                    }
                 }
             }
         }
     }
-    
-   
 }

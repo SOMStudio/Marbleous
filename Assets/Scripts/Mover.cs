@@ -1,327 +1,334 @@
 ﻿using System.Collections;
+using Trajectory;
 using UnityEngine;
 
-public class Mover : MonoBehaviour
+namespace Marbleous
 {
-    [SerializeField] private float speed = 10.0f;
+    public class Mover : MonoBehaviour
+    {
+        [SerializeField] private float speed = 10.0f;
 
-    [SerializeField] private bool moving = false;
-    
-    [SerializeField] private bool active = true;
-    
-    [SerializeField] int splineNumber = -1;
-    [SerializeField] float splineRelatePosition = 0.0f;
+        [SerializeField] private bool moving = false;
 
-    private bool startLevel = false;
+        [SerializeField] private bool active = true;
 
-    public int SplineNumber
-    {
-        get { return splineNumber; }
-    }
-    
-    public float SplineRelatePosition
-    {
-        get { return splineRelatePosition; }
-    }
-    
-    public bool Active
-    {
-        get { return active; }
-        set { active = value; }
-    }
-    
-    private void Awake()
-    {
-        startLevel = true;
-    }
+        [SerializeField] int splineNumber = -1;
+        [SerializeField] float splineRelatePosition = 0.0f;
 
-    private void OnDrawGizmos()
-    {
-        if (!startLevel)
+        private bool startLevel = false;
+
+        public int SplineNumber
         {
-            bool findProblem = false;
-            var levelManager = FindObjectOfType<LevelManager>();
+            get { return splineNumber; }
+        }
 
-            if (levelManager != null)
+        public float SplineRelatePosition
+        {
+            get { return splineRelatePosition; }
+        }
+
+        public bool Active
+        {
+            get { return active; }
+            set { active = value; }
+        }
+
+        private void Awake()
+        {
+            startLevel = true;
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (!startLevel)
             {
-                if (!levelManager.InWorkState)
+                bool findProblem = false;
+                var levelManager = FindObjectOfType<LevelManager>();
+
+                if (levelManager != null)
+                {
+                    if (!levelManager.InWorkState)
+                    {
+                        findProblem = true;
+                    }
+                }
+                else
                 {
                     findProblem = true;
                 }
-            }
-            else
-            {
-                findProblem = true;
-            }
 
-            if (!findProblem)
-            {
-                bool findNearestPosition = false;
-
-                float minDistance = 100;
-                int splineNumber = 0;
-                int routeNumber = 0;
-
-                for (int i = 0; i < levelManager.SplineList.Length; i++)
+                if (!findProblem)
                 {
-                    for (int j = 0; j <= levelManager.SplineList[i].RoutesCount; j++)
+                    bool findNearestPosition = false;
+
+                    float minDistance = 100;
+                    int splineNumber = 0;
+                    int routeNumber = 0;
+
+                    for (int i = 0; i < levelManager.SplineList.Length; i++)
                     {
-                        Vector3 curRoutePosition = levelManager.SplineList[i].GetRoutePosition(j);
-                        float distanceTo = (transform.position - curRoutePosition).magnitude;
-                        if (distanceTo < 10)
+                        for (int j = 0; j <= levelManager.SplineList[i].RoutesCount; j++)
                         {
-                            if (distanceTo < minDistance)
+                            Vector3 curRoutePosition = levelManager.SplineList[i].GetRoutePosition(j);
+                            float distanceTo = (transform.position - curRoutePosition).magnitude;
+                            if (distanceTo < 10)
                             {
-                                splineNumber = i;
-                                routeNumber = j;
+                                if (distanceTo < minDistance)
+                                {
+                                    splineNumber = i;
+                                    routeNumber = j;
 
-                                minDistance = distanceTo;
+                                    minDistance = distanceTo;
 
-                                findNearestPosition = true;
+                                    findNearestPosition = true;
+                                }
                             }
                         }
                     }
-                }
 
-                if (findNearestPosition)
-                {
-                    this.splineNumber = splineNumber;
-                    splineRelatePosition = levelManager.SplineList[splineNumber].GetRouteRelatePosition(routeNumber);
-
-                    transform.position = levelManager.SplineList[splineNumber].GetRoutePosition(routeNumber);;
-                }
-            }
-        }
-    }
-
-    private MoveSplineDirection CanMoveDirection(float splineRPosition, int splineN, MoveDirection moveDirection)
-    {
-        var result = MoveSplineDirection.not;
-
-        var levelManager = LevelManager.Instance;
-        Spline activeSpline = levelManager.SplineList[splineN];
-        Vector3 activeSplinePosition = activeSpline.GetPosition(splineRPosition);
-        float activeSplineRelatePosition = splineRPosition;
-
-        bool findResult = false;
-        if (!findResult && activeSplineRelatePosition < 1)
-        {
-            float checkSplineRelatePos = activeSplineRelatePosition + .1f;
-
-            if (checkSplineRelatePos <= 1)
-            {
-                Vector3 checkSplinePos = activeSpline.GetPosition(checkSplineRelatePos);
-                Vector3 directShift = checkSplinePos - activeSplinePosition;
-
-                switch (moveDirection)
-                {
-                    case MoveDirection.right when Mathf.RoundToInt(directShift.x) > 0:
-                        result = MoveSplineDirection.increment;
-                        findResult = true;
-                        break;
-                    case MoveDirection.left when Mathf.RoundToInt(directShift.x) < 0:
-                        result = MoveSplineDirection.increment;
-                        findResult = true;
-                        break;
-                    case MoveDirection.up when Mathf.RoundToInt(directShift.y) > 0:
-                        result = MoveSplineDirection.increment;
-                        findResult = true;
-                        break;
-                    case MoveDirection.down when Mathf.RoundToInt(directShift.y) < 0:
-                        result = MoveSplineDirection.increment;
-                        findResult = true;
-                        break;
-                }
-            }
-        }
-        if (!findResult && activeSplineRelatePosition > 0)
-        {
-            float checkSplineRelatePos = activeSplineRelatePosition - .1f;
-
-            if (checkSplineRelatePos >= 0)
-            {
-                Vector3 checkSplinePos = activeSpline.GetPosition(checkSplineRelatePos);
-                Vector3 directShift = checkSplinePos - activeSplinePosition;
-
-                switch (moveDirection)
-                {
-                    case MoveDirection.right when Mathf.RoundToInt(directShift.x) > 0:
-                        result = MoveSplineDirection.decrement;
-                        findResult = true;
-                        break;
-                    case MoveDirection.left when Mathf.RoundToInt(directShift.x) < 0:
-                        result = MoveSplineDirection.decrement;
-                        findResult = true;
-                        break;
-                    case MoveDirection.up when Mathf.RoundToInt(directShift.y) > 0:
-                        result = MoveSplineDirection.decrement;
-                        findResult = true;
-                        break;
-                    case MoveDirection.down when Mathf.RoundToInt(directShift.y) < 0:
-                        result = MoveSplineDirection.decrement;
-                        findResult = true;
-                        break;
-                }
-            }
-        }
-        
-        return result;
-    }
-
-    public void Move(MoveDirection moveDirection)
-    {
-        if (!active) return;
-        if (moving) return;
-
-        var levelManager = LevelManager.Instance;
-        bool findResult = false;
-        
-        // check active spline
-        var moveSplineDirection = CanMoveDirection(splineRelatePosition, splineNumber, moveDirection);
-        if (moveSplineDirection != MoveSplineDirection.not)
-        {
-            findResult = true;
-            Move(moveSplineDirection);
-        }
-
-        // check intersect spline
-        if (!findResult)
-        {
-            var activePosition = levelManager.SplineList[splineNumber].GetPosition(splineRelatePosition);
-            var splineList = levelManager.SplineList;
-            for (int i = 0; i < splineList.Length; i++)
-            {
-                if (i != splineNumber)
-                {
-                    var activeSpline = splineList[i];
-                    for (int j = 0; j < activeSpline.RoutesCount + 1; j++)
+                    if (findNearestPosition)
                     {
-                        var checkPosition = activeSpline.GetRoutePosition(j);
-                        if (activePosition == checkPosition)
-                        {
-                            var checkRelatePosition = activeSpline.GetRouteRelatePosition(j);
-                            moveSplineDirection = CanMoveDirection(checkRelatePosition, i, moveDirection);
-                            if (moveSplineDirection != MoveSplineDirection.not)
-                            {
-                                splineNumber = i;
-                                splineRelatePosition = checkRelatePosition;
-                            }
-                        }
+                        this.splineNumber = splineNumber;
+                        splineRelatePosition =
+                            levelManager.SplineList[splineNumber].GetRouteRelatePosition(routeNumber);
 
-                        if (moveSplineDirection != MoveSplineDirection.not) break;
+                        transform.position = levelManager.SplineList[splineNumber].GetRoutePosition(routeNumber);
+                        ;
                     }
                 }
-                
-                if (moveSplineDirection != MoveSplineDirection.not) break;
+            }
+        }
+
+        private MoveSplineDirection CanMoveDirection(float splineRPosition, int splineN, MoveDirection moveDirection)
+        {
+            var result = MoveSplineDirection.not;
+
+            var levelManager = LevelManager.Instance;
+            Spline activeSpline = levelManager.SplineList[splineN];
+            Vector3 activeSplinePosition = activeSpline.GetPosition(splineRPosition);
+            float activeSplineRelatePosition = splineRPosition;
+
+            bool findResult = false;
+            if (!findResult && activeSplineRelatePosition < 1)
+            {
+                float checkSplineRelatePos = activeSplineRelatePosition + .1f;
+
+                if (checkSplineRelatePos <= 1)
+                {
+                    Vector3 checkSplinePos = activeSpline.GetPosition(checkSplineRelatePos);
+                    Vector3 directShift = checkSplinePos - activeSplinePosition;
+
+                    switch (moveDirection)
+                    {
+                        case MoveDirection.right when Mathf.RoundToInt(directShift.x) > 0:
+                            result = MoveSplineDirection.increment;
+                            findResult = true;
+                            break;
+                        case MoveDirection.left when Mathf.RoundToInt(directShift.x) < 0:
+                            result = MoveSplineDirection.increment;
+                            findResult = true;
+                            break;
+                        case MoveDirection.up when Mathf.RoundToInt(directShift.y) > 0:
+                            result = MoveSplineDirection.increment;
+                            findResult = true;
+                            break;
+                        case MoveDirection.down when Mathf.RoundToInt(directShift.y) < 0:
+                            result = MoveSplineDirection.increment;
+                            findResult = true;
+                            break;
+                    }
+                }
             }
 
+            if (!findResult && activeSplineRelatePosition > 0)
+            {
+                float checkSplineRelatePos = activeSplineRelatePosition - .1f;
+
+                if (checkSplineRelatePos >= 0)
+                {
+                    Vector3 checkSplinePos = activeSpline.GetPosition(checkSplineRelatePos);
+                    Vector3 directShift = checkSplinePos - activeSplinePosition;
+
+                    switch (moveDirection)
+                    {
+                        case MoveDirection.right when Mathf.RoundToInt(directShift.x) > 0:
+                            result = MoveSplineDirection.decrement;
+                            findResult = true;
+                            break;
+                        case MoveDirection.left when Mathf.RoundToInt(directShift.x) < 0:
+                            result = MoveSplineDirection.decrement;
+                            findResult = true;
+                            break;
+                        case MoveDirection.up when Mathf.RoundToInt(directShift.y) > 0:
+                            result = MoveSplineDirection.decrement;
+                            findResult = true;
+                            break;
+                        case MoveDirection.down when Mathf.RoundToInt(directShift.y) < 0:
+                            result = MoveSplineDirection.decrement;
+                            findResult = true;
+                            break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public void Move(MoveDirection moveDirection)
+        {
+            if (!active) return;
+            if (moving) return;
+
+            var levelManager = LevelManager.Instance;
+            bool findResult = false;
+
+            // check active spline
+            var moveSplineDirection = CanMoveDirection(splineRelatePosition, splineNumber, moveDirection);
             if (moveSplineDirection != MoveSplineDirection.not)
             {
                 findResult = true;
                 Move(moveSplineDirection);
             }
-        }
 
-        if (!findResult)
-        {
-            LevelManager.Instance.BallCanNotMove(this, moveDirection);
-        }
-    }
-
-    public void Move(MoveSplineDirection moveSplineDirection)
-    {
-        if (!active) return;
-        if (moving) return;
-        
-        if (moveSplineDirection == MoveSplineDirection.increment)
-        {
-            StartCoroutine(GoByRouteToInc());
-        }
-        else if (moveSplineDirection == MoveSplineDirection.decrement)
-        {
-            StartCoroutine(GoByRouteToDec());
-        }
-        
-        //SoundManager.Instance?.PlaySoundByIndex(2, transform.position);
-    }
-    
-    private IEnumerator GoByRouteToInc()
-    {
-        var levelManager = LevelManager.Instance;
-        var activeSpline = levelManager.SplineList[splineNumber];
-        float lenthSpline = activeSpline.GetLength();
-        float targetPosition = levelManager.NextObjectIncDirection(this);
-
-        moving = true;
-
-        while (moving)
-        {
-            splineRelatePosition += Time.deltaTime * speed / lenthSpline;
-            if (splineRelatePosition > targetPosition)
+            // check intersect spline
+            if (!findResult)
             {
-                if (targetPosition == 1 && activeSpline.Cycle)
+                var activePosition = levelManager.SplineList[splineNumber].GetPosition(splineRelatePosition);
+                var splineList = levelManager.SplineList;
+                for (int i = 0; i < splineList.Length; i++)
                 {
-                    splineRelatePosition = 0;
-                    targetPosition = levelManager.NextObjectIncDirection(this);
+                    if (i != splineNumber)
+                    {
+                        var activeSpline = splineList[i];
+                        for (int j = 0; j < activeSpline.RoutesCount + 1; j++)
+                        {
+                            var checkPosition = activeSpline.GetRoutePosition(j);
+                            if (activePosition == checkPosition)
+                            {
+                                var checkRelatePosition = activeSpline.GetRouteRelatePosition(j);
+                                moveSplineDirection = CanMoveDirection(checkRelatePosition, i, moveDirection);
+                                if (moveSplineDirection != MoveSplineDirection.not)
+                                {
+                                    splineNumber = i;
+                                    splineRelatePosition = checkRelatePosition;
+                                }
+                            }
+
+                            if (moveSplineDirection != MoveSplineDirection.not) break;
+                        }
+                    }
+
+                    if (moveSplineDirection != MoveSplineDirection.not) break;
                 }
-                else
+
+                if (moveSplineDirection != MoveSplineDirection.not)
                 {
-                    splineRelatePosition = targetPosition;
-                    moving = false;
+                    findResult = true;
+                    Move(moveSplineDirection);
                 }
             }
 
-            transform.position = activeSpline.GetPosition(splineRelatePosition);
-
-            yield return new WaitForEndOfFrame();
-        }
-
-        if (!LevelManager.Instance.BallReachedTarget(this, MoveSplineDirection.increment))
-        {
-            if (targetPosition != 1)
+            if (!findResult)
             {
-                Move(MoveSplineDirection.increment);
+                LevelManager.Instance.BallCanNotMove(this, moveDirection);
             }
         }
-    }
-    
-    private IEnumerator GoByRouteToDec()
-    {
-        var levelManager = LevelManager.Instance;
-        var activeSpline = levelManager.SplineList[splineNumber];
-        float lenthSpline = activeSpline.GetLength();
-        float targetPosition = levelManager.NextObjectDecDirection(this);
 
-        moving = true;
-
-        while (moving)
+        public void Move(MoveSplineDirection moveSplineDirection)
         {
-            splineRelatePosition -= Time.deltaTime * speed / lenthSpline;
-            
-            if (splineRelatePosition < targetPosition)
+            if (!active) return;
+            if (moving) return;
+
+            if (moveSplineDirection == MoveSplineDirection.increment)
             {
-                if (targetPosition == 0 && activeSpline.Cycle)
-                {
-                    splineRelatePosition = 1;
-                    targetPosition = levelManager.NextObjectDecDirection(this);
-                }
-                else
-                {
-                    splineRelatePosition = targetPosition;
-                    moving = false;
-                }
+                StartCoroutine(GoByRouteToInc());
+            }
+            else if (moveSplineDirection == MoveSplineDirection.decrement)
+            {
+                StartCoroutine(GoByRouteToDec());
             }
 
-            transform.position = activeSpline.GetPosition(splineRelatePosition);
-
-            yield return new WaitForEndOfFrame();
+            //SoundManager.Instance?.PlaySoundByIndex(2, transform.position);
         }
 
-        if (!LevelManager.Instance.BallReachedTarget(this, MoveSplineDirection.decrement))
+        private IEnumerator GoByRouteToInc()
         {
-            if (targetPosition != 0)
+            var levelManager = LevelManager.Instance;
+            var activeSpline = levelManager.SplineList[splineNumber];
+            float lenthSpline = activeSpline.GetLength();
+            float targetPosition = levelManager.NextObjectIncDirection(this);
+
+            moving = true;
+
+            while (moving)
             {
-                Move(MoveSplineDirection.decrement);
+                splineRelatePosition += Time.deltaTime * speed / lenthSpline;
+                if (splineRelatePosition > targetPosition)
+                {
+                    if (targetPosition == 1 && activeSpline.Cycle)
+                    {
+                        splineRelatePosition = 0;
+                        targetPosition = levelManager.NextObjectIncDirection(this);
+                    }
+                    else
+                    {
+                        splineRelatePosition = targetPosition;
+                        moving = false;
+                    }
+                }
+
+                transform.position = activeSpline.GetPosition(splineRelatePosition);
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            if (!LevelManager.Instance.BallReachedTarget(this, MoveSplineDirection.increment))
+            {
+                if (targetPosition != 1)
+                {
+                    Move(MoveSplineDirection.increment);
+                }
+            }
+        }
+
+        private IEnumerator GoByRouteToDec()
+        {
+            var levelManager = LevelManager.Instance;
+            var activeSpline = levelManager.SplineList[splineNumber];
+            float lenthSpline = activeSpline.GetLength();
+            float targetPosition = levelManager.NextObjectDecDirection(this);
+
+            moving = true;
+
+            while (moving)
+            {
+                splineRelatePosition -= Time.deltaTime * speed / lenthSpline;
+
+                if (splineRelatePosition < targetPosition)
+                {
+                    if (targetPosition == 0 && activeSpline.Cycle)
+                    {
+                        splineRelatePosition = 1;
+                        targetPosition = levelManager.NextObjectDecDirection(this);
+                    }
+                    else
+                    {
+                        splineRelatePosition = targetPosition;
+                        moving = false;
+                    }
+                }
+
+                transform.position = activeSpline.GetPosition(splineRelatePosition);
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            if (!LevelManager.Instance.BallReachedTarget(this, MoveSplineDirection.decrement))
+            {
+                if (targetPosition != 0)
+                {
+                    Move(MoveSplineDirection.decrement);
+                }
             }
         }
     }

@@ -15,23 +15,25 @@
           </e>
           <e p="LevelManager.cs" t="Include" />
           <e p="Mover.cs" t="Include" />
-          <e p="Route.cs" t="Include" />
           <e p="SaveSystem" t="Include">
             <e p="FileSaveSystem.cs" t="Include" />
             <e p="Interfaces" t="Include">
               <e p="ISaveSystem.cs" t="Include" />
             </e>
+            <e p="UserManager.cs" t="Include" />
           </e>
           <e p="Sounds" t="Include">
             <e p="SoundManager.cs" t="Include" />
           </e>
-          <e p="Spline.cs" t="Include" />
+          <e p="Trajectory" t="Include">
+            <e p="Route.cs" t="Include" />
+            <e p="Spline.cs" t="Include" />
+          </e>
           <e p="UI" t="Include">
             <e p="MenuManager.cs" t="Include" />
             <e p="UiLevelButton.cs" t="Include" />
             <e p="UiLevelList.cs" t="Include" />
           </e>
-          <e p="UserManager.cs" t="Include" />
           <e p="Utils" t="Include">
             <e p="AnimationOpenClose.cs" t="Include" />
           </e>
