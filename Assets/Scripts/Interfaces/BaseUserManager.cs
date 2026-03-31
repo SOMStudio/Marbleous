@@ -1,7 +1,6 @@
 using UnityEngine;
 
 [AddComponentMenu("Base/User Manager")]
-
 public class BaseUserManager : MonoBehaviour
 {
 	protected int score;
@@ -12,8 +11,7 @@ public class BaseUserManager : MonoBehaviour
 	protected bool isFinished;
 
 	[SerializeField] protected string playerName = "Anonim";
-
-	// main Logic
+	
 	public virtual void GetDefaultData()
 	{
 		playerName = "Anonim";
@@ -95,8 +93,6 @@ public class BaseUserManager : MonoBehaviour
 	{
 		health = num;
 	}
-
-	//===============================
 
 	public bool GetIsFinished()
 	{

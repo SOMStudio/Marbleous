@@ -7,24 +7,18 @@ namespace Marbleous
         [SerializeField] private bool active = true;
 
         [SerializeField] int splineNumber = -1;
-        [SerializeField] float splineRelatePosition = 0.0f;
+        [SerializeField] float splineRelatePosition;
 
         private bool startLevel = false;
 
-        public int SplineNumber
-        {
-            get { return splineNumber; }
-        }
+        public int SplineNumber => splineNumber;
 
-        public float SplineRelatePosition
-        {
-            get { return splineRelatePosition; }
-        }
+        public float SplineRelatePosition => splineRelatePosition;
 
         public bool Active
         {
-            get { return active; }
-            set { active = value; }
+            get => active;
+            set => active = value;
         }
 
         private void OnDrawGizmos()

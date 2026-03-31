@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [AddComponentMenu("Base/Sound Manager")]
-
 public class SoundManager : MonoBehaviour
 {
 	[SerializeField]
@@ -22,8 +21,7 @@ public class SoundManager : MonoBehaviour
 	[System.NonSerialized]
 	public static SoundManager Instance;
 
-	// main event
-	void Awake()
+	private void Awake()
 	{
 		if (Instance == null) {
 			Instance = this;
@@ -36,17 +34,17 @@ public class SoundManager : MonoBehaviour
 		}
 	}
 
-	void Start ()
+	private void Start ()
 	{
 		if (soundObjectList == null) {
 			Init ();
 		}
 	}
-	
-	void Init() {
+
+	private void Init() {
 		DontDestroyOnLoad (this.gameObject);
 		
-		string stKey = string.Format("{0}_SFXVol", gamePrefsName);
+		string stKey = $"{gamePrefsName}_SFXVol";
 		if (PlayerPrefs.HasKey (stKey)) {
 			volume = PlayerPrefs.GetFloat (stKey);
 		} else {
@@ -75,7 +73,7 @@ public class SoundManager : MonoBehaviour
 			Init ();
 		}
 
-		string stKey = string.Format("{0}_SFXVol", gamePrefsName);
+		string stKey = $"{gamePrefsName}_SFXVol";
 		volume= PlayerPrefs.GetFloat(stKey);
 
 		for (int i = 0; i < soundObjectList.Count; i++) {

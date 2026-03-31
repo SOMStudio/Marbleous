@@ -8,8 +8,8 @@ namespace Marbleous.Menu
     {
         [Header("Level List Manager")]
         [SerializeField] private UiLevelList levelList;
-        
-        void LateUpdate() {
+
+        private void LateUpdate() {
             if (didInit) {
                 if (Input.GetKeyDown (KeyCode.Escape)) {
                     ClickEscapeEvent ();

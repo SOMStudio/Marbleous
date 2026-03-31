@@ -7,14 +7,14 @@ namespace Trajectory
     public class Spline : MonoBehaviour
     {
         [SerializeField] private Route[] routes;
-        [SerializeField] private bool cycle = false;
+        [SerializeField] private bool cycle;
         [SerializeField] private bool joinControl = true;
-        [SerializeField] private float splineLength = 0.0f;
+        [SerializeField] private float splineLength;
     
-        private List<float> routesLength = new List<float>();
-        private List<float> dependLength = new List<float>();
+        private List<float> routesLength = new();
+        private List<float> dependLength = new();
 
-        private bool inWorkState = false;
+        private bool inWorkState;
 
         public bool InWorkState => inWorkState;
 
@@ -57,8 +57,8 @@ namespace Trajectory
                     routes[i].ControlPoints[0].position = routes[i - 1].ControlPoints[3].position;
                     routes[i].ControlPoints[0].gameObject.SetActive(false);
 
-                    Vector3 dirLine = Vector3.zero;
-                    float lengthDirLine = 0.0f;
+                    Vector3 directLine;
+                    float lengthDirLine;
 
                     if (i == routes.Length - 1)
                     {
@@ -69,27 +69,27 @@ namespace Trajectory
 
                             if (joinControl)
                             {
-                                dirLine = (routes[0].ControlPoints[0].position - routes[0].ControlPoints[1].position)
+                                directLine = (routes[0].ControlPoints[0].position - routes[0].ControlPoints[1].position)
                                     .normalized;
                                 lengthDirLine = (routes[i].ControlPoints[2].position - routes[i].ControlPoints[3].position)
                                     .magnitude;
                                 routes[i].ControlPoints[2].position =
-                                    routes[i].ControlPoints[3].position + dirLine * lengthDirLine;
+                                    routes[i].ControlPoints[3].position + directLine * lengthDirLine;
                             }
                         }
                     }
 
                     if (joinControl)
                     {
-                        dirLine = (routes[i - 1].ControlPoints[3].position - routes[i - 1].ControlPoints[2].position)
+                        directLine = (routes[i - 1].ControlPoints[3].position - routes[i - 1].ControlPoints[2].position)
                             .normalized;
                         lengthDirLine = (routes[i].ControlPoints[1].position - routes[i].ControlPoints[0].position)
                             .magnitude;
-                        routes[i].ControlPoints[1].position = routes[i].ControlPoints[0].position + dirLine * lengthDirLine;
+                        routes[i].ControlPoints[1].position = routes[i].ControlPoints[0].position + directLine * lengthDirLine;
                     }
                 }
 
-                GetLength(true);
+                GetLength();
             }
         }
     

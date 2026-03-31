@@ -8,10 +8,10 @@ namespace Marbleous.SaveSystem
 
 		private ISaveSystem fileSaveSystem; 
 	
-		private bool dataWasRead = false;
-		private bool dataNeedWrite = false;
+		private bool dataWasRead;
+		private bool dataNeedWrite;
 
-		void Awake()
+		private void Awake()
 		{
 			if (!Instance)
 			{
@@ -46,10 +46,7 @@ namespace Marbleous.SaveSystem
 				LoadPrivateDataPlayer();
 			}
 		}
-
-		/// <summary>
-		/// save player data in file with encrypting, not use for Web-application (web can't write file)
-		/// </summary>
+		
 		public void SavePrivateDataPlayer()
 		{
 			if (dataWasRead)
@@ -70,10 +67,7 @@ namespace Marbleous.SaveSystem
 				LoadPrivateDataPlayer();
 			}
 		}
-
-		/// <summary>
-		/// restore player data from encrypting file.
-		/// </summary>
+		
 		public void LoadPrivateDataPlayer()
 		{
 			if (!dataWasRead)

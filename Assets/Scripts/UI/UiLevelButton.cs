@@ -10,14 +10,14 @@ namespace Marbleous.Menu
 
         public bool Interactable
         {
-            get { return buttonLevel.interactable; }
-            set { buttonLevel.interactable = value; }
+            get => buttonLevel.interactable;
+            set => buttonLevel.interactable = value;
         }
 
         public bool Visit
         {
-            get { return toggleVisitLevel.isOn; }
-            set { toggleVisitLevel.isOn = value; }
+            get => toggleVisitLevel.isOn;
+            set => toggleVisitLevel.isOn = value;
         }
     }
 }

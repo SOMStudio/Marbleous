@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 [AddComponentMenu("Utility/Animation Open-Close")]
-
 public class AnimationOpenClose : MonoBehaviour {
 
 	[SerializeField]
@@ -11,8 +10,8 @@ public class AnimationOpenClose : MonoBehaviour {
 	static readonly int hide_Anim = Animator.StringToHash ("hide");
 
 	private Animator animator;
-	
-	void Awake () {
+
+	private void Awake () {
 		animator = GetComponent<Animator> ();
 
 		if (animator.parameters.Length > 1) {

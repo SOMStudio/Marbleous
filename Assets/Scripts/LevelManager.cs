@@ -23,7 +23,7 @@ namespace Marbleous
 
         public static LevelManager Instance;
 
-        private bool inWorkState = false;
+        private bool inWorkState;
 
         public bool InWorkState => inWorkState;
 
@@ -116,7 +116,7 @@ namespace Marbleous
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {

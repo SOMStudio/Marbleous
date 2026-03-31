@@ -8,34 +8,28 @@ namespace Marbleous
     {
         [Header("Main")]
         [SerializeField] private float speed = 10.0f;
-        [SerializeField] private bool moving = false;
+        [SerializeField] private bool moving;
         [SerializeField] private bool active = true;
 
         [Header("Spline")]
-        [SerializeField] int splineNumber = -1;
-        [SerializeField] float splineRelatePosition = 0.0f;
+        [SerializeField] private int splineNumber = -1;
+        [SerializeField] private float splineRelatePosition;
 
         [Header("Shift")]
         [SerializeField] private AnimationCurve shiftCurve;
         [SerializeField] private float shiftMultiplier = 1;
         [SerializeField] private float timeDuration = 1;
 
-        private bool startLevel = false;
+        private bool startLevel;
 
-        public int SplineNumber
-        {
-            get { return splineNumber; }
-        }
+        public int SplineNumber => splineNumber;
 
-        public float SplineRelatePosition
-        {
-            get { return splineRelatePosition; }
-        }
+        public float SplineRelatePosition => splineRelatePosition;
 
         public bool Active
         {
-            get { return active; }
-            set { active = value; }
+            get => active;
+            set => active = value;
         }
 
         private void Awake()
@@ -186,16 +180,14 @@ namespace Marbleous
 
             var levelManager = LevelManager.Instance;
             bool findResult = false;
-
-            // check active spline
+            
             var moveSplineDirection = CanMoveDirection(splineRelatePosition, splineNumber, moveDirection);
             if (moveSplineDirection != MoveSplineDirection.not)
             {
                 findResult = true;
                 Move(moveSplineDirection);
             }
-
-            // check intersect spline
+            
             if (!findResult)
             {
                 var activePosition = levelManager.SplineList[splineNumber].GetPosition(splineRelatePosition);
@@ -252,8 +244,6 @@ namespace Marbleous
             {
                 StartCoroutine(GoByRouteToDec());
             }
-
-            //SoundManager.Instance?.PlaySoundByIndex(2, transform.position);
         }
 
         private IEnumerator GoByRouteToInc()

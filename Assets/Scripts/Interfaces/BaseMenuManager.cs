@@ -7,7 +7,7 @@ using UnityEditor;
 
 public class BaseMenuManager : MonoBehaviour {
 	
-	public bool didInit = false;
+	public bool didInit;
 	
 	[Header("Base Settings")]
 	public string gamePrefsName = "DefaultGame";
@@ -18,7 +18,7 @@ public class BaseMenuManager : MonoBehaviour {
 	private Slider audioSFXSlider;
 	
 	private int detailLevels = 6;
-	private bool needSaveOptions = false;
+	private bool needSaveOptions;
 	
 	[Header("Main window list")]
 	[SerializeField]
@@ -37,12 +37,11 @@ public class BaseMenuManager : MonoBehaviour {
 	protected int consoleWindowActive = -1;
 
 	[Header("Console windows")]
-	//YesNo
 	[SerializeField]
 	private Text consoleWInYesNoTextHead;
 	private UnityEvent consoleWInYesNoActinYes = new UnityEvent();
-	
-	void Start()
+
+	private void Start()
 	{
 		RestoreOptionsPref ();
 	}
@@ -51,7 +50,7 @@ public class BaseMenuManager : MonoBehaviour {
 	{
 		string stKey = "";
 		
-		stKey = string.Format("{0}_SFXVol", gamePrefsName);
+		stKey = $"{gamePrefsName}_SFXVol";
 		if (PlayerPrefs.HasKey (stKey)) {
 			audioSFXSliderValue = PlayerPrefs.GetFloat (stKey);
 		} else {
@@ -69,7 +68,7 @@ public class BaseMenuManager : MonoBehaviour {
 	{
 		string stKey = "";
 
-		stKey = string.Format("{0}_SFXVol", gamePrefsName);
+		stKey = $"{gamePrefsName}_SFXVol";
 		PlayerPrefs.SetFloat(stKey, audioSFXSliderValue);
 	}
 
@@ -114,8 +113,7 @@ public class BaseMenuManager : MonoBehaviour {
 			}
 		}
 	}
-
-	//window
+	
 	private void WindowDisActivate_Open() {
 		if (windowDisActivateAnimation) {
 			windowDisActivateAnimation.Open ();
@@ -127,8 +125,7 @@ public class BaseMenuManager : MonoBehaviour {
 			windowDisActivateAnimation.Close ();
 		}
 	}
-
-	//consoleWindows
+	
 	private void ConsoleWindowDisActivate_Open() {
 		if (consoleWindowDisActivateAnimation) {
 			consoleWindowDisActivateAnimation.Open ();
@@ -143,35 +140,20 @@ public class BaseMenuManager : MonoBehaviour {
 	#endregion
 
 	#region Events
-	protected virtual void ActivateWindowEvent() {
-	
-	}
+	protected virtual void ActivateWindowEvent() { }
 
-	protected virtual void DisActivateWindowEvent() {
-	
-	}
+	protected virtual void DisActivateWindowEvent() { }
 
-	protected virtual void ChangeWindowEvent(int number) {
-	
-	}
+	protected virtual void ChangeWindowEvent(int number) { }
 
-	protected virtual void ActivateConsoleWEvent() {
-	
-	}
+	protected virtual void ActivateConsoleWEvent() { }
 
-	protected virtual void DisActivateConsoleWEvent() {
-	
-	}
+	protected virtual void DisActivateConsoleWEvent() { }
 
-	protected virtual void ChangeConsoleWEvent(int number) {
-	
-	}
+	protected virtual void ChangeConsoleWEvent(int number) { }
 	#endregion
 	
-	//windows
-	public int WindowActive {
-		get { return windowActive; }
-	}
+	public int WindowActive => windowActive;
 
 	public void ActivateWindow(int number) {
 		if (windowActive == number) {
@@ -212,11 +194,8 @@ public class BaseMenuManager : MonoBehaviour {
 			needSaveOptions = !needSaveOptions;
 		}
 	}
-
-	//consoleWindows
-	public int ConsoleWindowActive {
-		get { return consoleWindowActive; }
-	}
+	
+	public int ConsoleWindowActive => consoleWindowActive;
 
 	public void ActivateConsoleWindow(int number) {
 		if (consoleWindowActive == number) {
@@ -257,8 +236,7 @@ public class BaseMenuManager : MonoBehaviour {
 			needSaveOptions = !needSaveOptions;
 		}
 	}
-
-	//console YesNo
+	
 	protected void ConsoleWinYesNo_SetTxt(string val) {
 		consoleWInYesNoTextHead.text = val;
 	}

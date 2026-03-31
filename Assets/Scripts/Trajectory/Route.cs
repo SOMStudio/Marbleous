@@ -5,12 +5,12 @@ namespace Trajectory
     public class Route : MonoBehaviour
     {
         [SerializeField] private Transform[] controlPoints;
-        [SerializeField] private float length = 0.0f;
+        [SerializeField] private float length;
 
         private Vector3 currentPosition;
         private Vector3 prevPosition;
 
-        private bool inWorkState = false;
+        private bool inWorkState;
 
         public bool InWorkState => inWorkState;
 
@@ -77,12 +77,12 @@ namespace Trajectory
         private void UpdateRouteLength()
         {
             float lengthCalculate = 0.0f;
-            const int StepCount = 50;
+            const int stepCount = 50;
             Vector3 point = GetBezierPosition(0);
         
-            for (int i = 0; i < StepCount; ++i)
+            for (int i = 0; i < stepCount; ++i)
             {
-                Vector3 nextPoint = GetBezierPosition((float)(i + 1) / StepCount);
+                Vector3 nextPoint = GetBezierPosition((float)(i + 1) / stepCount);
                 lengthCalculate += (point - nextPoint).magnitude;
                 point = nextPoint;
             }
@@ -101,13 +101,13 @@ namespace Trajectory
         public Vector3 GetPosition(float t)
         {
             float totalLength = GetLength(true);
-            const int StepCount = 50;
+            const int stepCount = 50;
 
             float currentLength = 0.0f;
             Vector3 pointA = GetBezierPosition(0.0f);
-            for (var i = 1; i < StepCount; ++i)
+            for (var i = 1; i < stepCount; ++i)
             {
-                Vector3 pointB = GetBezierPosition((float) i / StepCount);
+                Vector3 pointB = GetBezierPosition((float) i / stepCount);
                 float segmentLength = (pointB - pointA).magnitude;
 
                 if (t >= currentLength/totalLength && t < (currentLength + segmentLength)/totalLength)
