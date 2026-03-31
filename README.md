@@ -20,6 +20,6 @@ All
 4) Added the ability to set the sound level in the settings.
 5) Saving player progress.
 
-## Unity 19.2.8
+## Unity 2022
 
 ![Marbleous](screenshot.png)
